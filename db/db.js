@@ -89,7 +89,7 @@ class DB {
     async selectCompanyID(companyName) {
         console.log(`Selecting ID for Company Name: ${companyName}`);
         try{
-            const companyRows = await this.query("select id from companies where company_name = $1", [companyName]);
+            const companyRows = await this.query("select * from companies where company_name = $1", [companyName]);
             if(companyRows.rowCount == 0) {
                 return -1;
             }
@@ -180,6 +180,71 @@ class DB {
             console.log(`Error Selecting Company ID associated with Host Name: ${hostName}`);
         }
     }
+
+    async selectCompanies() {
+        console.log("selecting a list of company names");
+        try {
+            let res = await this.query('select * from companies', []);
+            return res.rows;
+        }
+        catch(err) {
+            console.log(`Error selecting company names: ${err}`);
+        }
+    }
+
+    async insertCompanyCategories(id, categories) {
+        console.log(`inserting Categories for company with ID ${id}. Categories: ${categories}`);
+        if(categories.length == 0) {
+            console.log(`No Categories provided for company ${id}`);
+            return;
+        }
+        try {
+            let res = await this.query('select * from company_categories where company_id = $1', [id]);
+            if(res.rowCount != 0) {
+                console.log(`Company ${id} already has category information logged.`);
+                return;
+            }
+            await this.query('insert into company_categories(company_id, categories) values ($1,$2)', [id, categories]);
+        }
+        catch(err) {
+            console.log(`Error inserting company category info. ${err}`);
+        }
+    }
+
+    async insertCategories(categories) {
+        console.log(`inserting Categories: ${categories}`);
+        if(categories.length == 0) {
+            console.log(`No Categories provided.`);
+            return;
+        }
+        categories.forEach( async (cat) => {
+            try {
+                let res = await this.query('select * from categories where category = $1', [cat]);
+                if(res.rowCount != 0) {
+                    console.log(`the category, ${cat}, is already logged.`);
+                    return;
+                }
+                await this.query('insert into categories(category) values ($1)', [cat]);
+            }
+            catch(err) {
+                console.log(`Error inserting category, ${cat}. ${err}`);
+            }
+        });
+    }
+
+    async selectCompanyCategories(companyID) {
+        console.log(`selecting company categories for ${companyID}`);
+        try {
+            let res = await this.query('select * from company_categories where company_id = $1', [companyID]);
+            return res.rows[0].categories;
+        }
+        catch(err) {
+            console.log(`Error selecting company categories for ${companyID}`)
+        }
+    }
+
+
+
 }
 
 module.exports = DB;
