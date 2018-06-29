@@ -19,7 +19,13 @@ class CrunchBaseScraper {
     }
 
     findCategoryHrefs($) {
-        return $("a[href*='/search/organizations/field/organizations/categories/']").map((index, value) => $(value).attr('title'));
+        return $("a[href*='/search/organizations/field/organizations/categories/']")
+            .map((index, value) => $(value).attr('title'));
+    }
+
+    findLocationHrefs($) {
+        return $("a[href*='/search/organizations/field/organizations/location_identifiers/']")
+        .map((index, value) => $(value).attr('title'));
     }
 
     filterHRefs(hrefArray, regex) {
@@ -31,8 +37,12 @@ class CrunchBaseScraper {
         return hrefArray.map((href) => href.replace(regex, ''));
     }
 
+    findHRefs($) {
+        return this.scrapeClassHrefs($, '.cb-link.ng-star-inserted');
+    }
+
     findCategories($) {
-        let hrefs = this.scrapeClassHrefs($, '.cb-link.ng-star-inserted');
+        let hrefs = this.filterHRefs($);
 
         let hrefRegex = new RegExp("^/search/organizations/field/organizations/categories/")
         let categoryHrefs = this.filterHRefs(hrefs.toArray(), hrefRegex);
@@ -41,14 +51,25 @@ class CrunchBaseScraper {
         return categories;
     }
 
+    findLocations($) {
+        let hrefs = this.findHRefs($);
+
+        let hrefRegex = new RegExp("^/search/organizations/field/organizations/location_identifiers/");
+        let hrefObjects = hrefs.map((obj) => hrefRegex.test($(obj).att('href')));
+        return hrefObjects.map((obj) => $(obj).attr('title')).toArray();
+    }
+
     async scrapePage(url) {
         let page = await this.requestPage(url);
 
         let $ = await this.loadPage(page);
 
         let categories = this.findCategoryHrefs($);
-
-        return categories.toArray();
+        let locations = this.findLocationHrefs($);
+        return {
+            categories : categories.toArray(),
+            locations  : locations.toArray()
+        }
     }
 }
 
