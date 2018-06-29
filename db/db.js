@@ -246,9 +246,9 @@ class DB {
     async selectLocaleByID(companyID) {
         console.log(`Selecting Locale for ${companyID}`);
         try{
-            let ret = await this.query('select locale_iso_6391 from companies where id = $1', [companyID]);
+            let ret = await this.query('select * from companies where id = $1', [companyID]);
             if(ret.rowCount != 0) {
-                return ret[0].locale_iso_6391;
+                return ret.rows[0].locale_iso_6391;
             }
             else {
                 return "";
@@ -260,13 +260,13 @@ class DB {
         }
     }
 
-    async updateCompanyLocation(companyName, localeISO8391) {
-        console.log(`Updating ${companyName} locale to ${localeISO8391}`);
+    async updateCompanyLocation(companyName, locale_iso_6391) {
+        console.log(`Updating ${companyName} locale to ${locale_iso_6391}`);
         try{
-            await this.query('update companies set locale_iso_6391 = $1 where lower(company_name) = $2', [localeISO8391, companyName.toLowerCase()])
+            await this.query('update companies set locale_iso_6391 = $1 where lower(company_name) = $2', [locale_iso_6391, companyName.toLowerCase()])
         }
         catch(err) {
-            console.log(`Unable to update ${companyName} with Locale of ${localeISO8391}. Erro: ${err}`);
+            console.log(`Unable to update ${companyName} with Locale of ${locale_iso_6391}. Erro: ${err}`);
         }
     }
 
