@@ -33,6 +33,10 @@ class Mapper {
 
         let locale = await db.selectLocaleByID(mappedCompanyID);
 
+        if(!locale) {
+            locale = "";
+        }
+        
         return {
             "hostName":hostName,
             "hostID":hostID,
