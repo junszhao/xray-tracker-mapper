@@ -246,7 +246,7 @@ class DB {
     async selectLocaleByID(companyID) {
         console.log(`Selecting Locale for ${companyID}`);
         try{
-            await this.query('select companyID from companies where id = $1', [companyID]);
+            await this.query('select id from companies where id = $1', [companyID]);
         }
         catch(err) {
             console.log(`Unable to Select locale for ${companyID}, Error: ${err}`);
