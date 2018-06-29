@@ -38,7 +38,7 @@ class DB {
             const ret = await this.pool.connect();
             ret.lquery = (text, values) => {
                 if (values) {
-                     logger.debug('lquery:', text, values);
+                    logger.debug('lquery:', text, values);
                 }
                 else {
                     logger.debug('lquery:', text);
