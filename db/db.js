@@ -181,6 +181,17 @@ class DB {
         }
     }
 
+    async selectHostnames(){
+        console.log("selecting a list of company names");
+        try {
+            let res = await this.query('select * from host_names', []);
+            return res.rows;
+        }
+        catch(err) {
+            console.log(`Error selecting host names: ${err}`);
+        }
+    }
+
     async selectCompanies() {
         console.log("selecting a list of company names");
         try {
@@ -230,6 +241,16 @@ class DB {
                 console.log(`Error inserting category, ${cat}. ${err}`);
             }
         });
+    }
+
+    async updateCompanyLocation(companyName, localeISO8391) {
+        console.log(`Updating ${companyName} locale to ${localeISO8391}`);
+        try{
+            await this.query('update companies set locale_iso_6391 = $1 where lower(company_name) = $2', [localeISO8391, companyName.toLowerCase()])
+        }
+        catch(err) {
+            console.log(`Unable to update ${companyName} with Locale of ${localeISO8391}. Erro: ${err}`);
+        }
     }
 
     async selectCompanyCategories(companyID) {
