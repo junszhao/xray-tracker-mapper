@@ -31,12 +31,15 @@ class Mapper {
 
         let companyCategories = await db.selectCompanyCategories(mappedCompanyID);
 
+        let locale = await db.selectLocaleByID(mappedCompanyID);
+
         return {
             "hostName":hostName,
             "hostID":hostID,
             "companyName":companyName,
             "companyID":mappedCompanyID,
-            "categories" : companyCategories
+            "categories" : companyCategories,
+            "locale" : locale
         };
     }
     async getRegistrantOrganisation(whoIsData) {

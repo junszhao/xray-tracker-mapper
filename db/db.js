@@ -243,6 +243,16 @@ class DB {
         });
     }
 
+    async selectLocaleByID(companyID) {
+        console.log(`Selecting Locale for ${companyID}`);
+        try{
+            await this.query('select companyID from companies where id = $1', [companyID]);
+        }
+        catch(err) {
+            console.log(`Unable to Select locale for ${companyID}, Error: ${err}`);
+        }
+    }
+
     async updateCompanyLocation(companyName, localeISO8391) {
         console.log(`Updating ${companyName} locale to ${localeISO8391}`);
         try{
