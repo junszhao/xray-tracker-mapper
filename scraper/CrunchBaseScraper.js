@@ -1,7 +1,7 @@
 
 const cheerio = require("cheerio");
 const request = require('async-request');
-
+const geoip = require('geoip-lite');
 
 class CrunchBaseScraper {
 
@@ -64,12 +64,7 @@ class CrunchBaseScraper {
 
         let $ = await this.loadPage(page);
 
-        let categories = this.findCategoryHrefs($);
-        let locations = this.findLocationHrefs($);
-        return {
-            categories : categories.toArray(),
-            locations  : locations.toArray()
-        }
+        return this.findCategoryHrefs($);
     }
 }
 
