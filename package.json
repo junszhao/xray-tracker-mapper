@@ -11,6 +11,7 @@
     "line-reader": "^0.4.0",
     "pg": "^7.4.3",
     "tldjs": "^2.3.1",
+    "tor-request": "^2.1.2",
     "whois-json": "^2.0.2"
   },
   "devDependencies": {},

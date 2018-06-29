@@ -11,9 +11,10 @@ async function main() {
         for(let record of company_records) {
             let url_name = record.company_name.toLowerCase().replace(' ', '-');
             let url = "https://www.crunchbase.com/organization/" + url_name;
-            let information = await scraper.scrapePage(url);
-            information.name = url_name
-            console.log(information);
+            await scraper.scrapePage(url, (information) => {
+                information.name = url_name
+                console.log(information);
+            });
             // await db.insertCompanyCategories(record.id, categories);
             // await db.insertCategories(categories);
         }

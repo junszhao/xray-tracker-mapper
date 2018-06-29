@@ -1,12 +1,13 @@
 
 const cheerio = require("cheerio");
 const request = require('async-request');
-
+const tr = require('tor-request');
 
 class CrunchBaseScraper {
 
-    async requestPage(url) {
-        return await request(url);
+    async requestPage(url, callback) {
+        //return await request(url);
+        tr.request(url, callback);
     }
 
     loadPage(page) {
@@ -59,17 +60,33 @@ class CrunchBaseScraper {
         return hrefObjects.map((obj) => $(obj).attr('title')).toArray();
     }
 
-    async scrapePage(url) {
-        let page = await this.requestPage(url);
-
-        let $ = await this.loadPage(page);
-
-        let categories = this.findCategoryHrefs($);
-        let locations = this.findLocationHrefs($);
-        return {
-            categories : categories.toArray(),
-            locations  : locations.toArray()
-        }
+    async scrapePage(url, callback) {
+        await this.requestPage({
+            url: url,
+            headers: {
+                'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36',
+                'referer': 'https://www.google.co.uk/'
+            }
+        },
+        (err, res, body) => {
+            if(err) {
+                console.log(err);
+                return;
+            }
+            console.log(`Response Code: ${res.statusCode}`);
+            if(res.statusCode == 200) {
+                let $ = this.loadPage(body.html());
+                let categories = this.findCategoryHrefs($);
+                let locations = this.findLocationHrefs($);
+                let information = {
+                    categories : categories.toArray(),
+                    locations  : locations.toArray()
+                }
+                console.log(information);
+                callback(information);
+            }
+            return;
+        });
     }
 }
 
