@@ -29,4 +29,20 @@ create table categories(
     category    text    not null primary key
 );
 
+create table locations(
+    id              serial not null unique,
+    city_name       text   not null,
+    area_name       text   not null,
+    country_name    text   not null,
+    primary key(city_name, area_name, country_name)
+);
+
+create table company_locations(
+    id              serial not null unique,
+    company_id      serial not null primary key references companies(id),
+    location_id     serial not null references locations(id)
+);
+
+
+
 commit;
