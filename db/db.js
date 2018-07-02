@@ -69,6 +69,24 @@ class DB {
         }
     }
 
+    async insertCompany(companyName, location) {
+        console.log(`Inserting Company Details Company: ${companyName}, Location: ${location}}`)
+        try {
+            const checkRows = await this.query('select * from companies where company_name=$1', [companyName]);
+            if (checkRows.rowCount != 0) {
+                console.log(`${companyName} already exists in the table`);
+                return;
+            }
+    
+            console.log(`${companyName} not found in table, inserting it now.`);
+            await this.query('insert into companies (company_name, locale_iso_6391) values($1, $2)', [companyName, location]);
+        }
+        catch(err) {
+            console.log(`Error inserting Company Name: ${companyName} and Location: ${location}- Error: ${err}`);
+        }
+    
+    }
+
     async insertCompanyName(companyName) {
         console.log(`Inserting Company Name: ${companyName}`);
         try {
