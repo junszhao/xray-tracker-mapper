@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/host/:hostName', async (req, res) => {
-    let headersSent = false;
+    let message = {"details":"unknown"};
     process.on('uncaughtException', function (err) {
         if(!headersSent){
             res.send({"UNCAUGHT_ERROR":err.toString()});
@@ -29,13 +29,11 @@ app.get('/host/:hostName', async (req, res) => {
             && mapping.companyName != undefined
             && mapping.hostID != undefined
             && mapping.hostName != undefined) {
-                res.send(mapping);
-
-            }
-            else {
-                res.send({"details":"unknown"});
+                message = mapping
+                
             }
             headersSent = true;
+            res.send(message);
         }
     }
     catch(err){
