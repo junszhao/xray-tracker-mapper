@@ -49,10 +49,6 @@ class Mapper {
         };
     }
     getRegistrantOrganisation(whoIsData) {
-        console.log(`\n\n\n\n`);
-        console.log(whoIsData);
-        console.log(`\n\n\n\n`);
-
         if(whoIsData.registrantOrganization == undefined) {
             console.log(`Registrant Not Defined. Selecting Registrar`);
             return whoIsData.registrar;

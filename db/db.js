@@ -2,6 +2,7 @@
 const config = require('../config/config.json');
 const pg = require('pg');
 
+
 class DB {
     constructor(module) {
         const db_config = config.db;
@@ -177,22 +178,33 @@ class DB {
         }
     }
 
+
+    shortenDomain(domain) {
+        return domain.substring(domain.indexOf('.') + 1);
+    }
+
     async selectHostsCompany(hostName) {
         console.log(`Selecting the Company ID associated with the Host Name: ${hostName}`);
         try {
 
-            const hostID = await this.selectHostNameID(hostName);
-            if (hostID == -1) {
-                console.log(`Hostname (${hostName}) Not found.`);
-                return -1;
+            // Check if we have that host name
+                // if so check if we have a company for it
+                    // return company if we do
+            // shorten hostname and then repeat.
+            do {
+                let hostID = await this.selectHostNameID(hostName);
+                if (hostID != -1) {
+                    console.log(`Hostname (${hostName}) found.`);
+                    const companyIDs = await this.query("select company_id from host_company_mappings where host_name_id = $1", [hostID]);
+                    if (companyIDs.rowCount != 0) {
+                        return companyIDs.rows[0].company_id;
+                    }
+                }
+                hostName = this.shortenDomain(hostName);
             }
+            while(hostName.split('.').length > 1)
 
-            const companyIDs = await this.query("select company_id from host_company_mappings where host_name_id = $1", [hostID]);
-            if (companyIDs.rowCount == 0) {
-                return -1;
-            }
-
-            return companyIDs.rows[0].company_id;
+            return -1;
         }
         catch(err) {
             console.log(`Error Selecting Company ID associated with Host Name: ${hostName}`);
