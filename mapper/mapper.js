@@ -23,9 +23,9 @@ class Mapper {
 
         let mappedCompanyID = await this.mapHostNameToCompany(hostName);
         if(mappedCompanyID == -1) {
-            console.log(`Error Mapping Host Name to Company.`);
+            console.log(`Warning: Mapping Host Name to Company unsuccessful.`);
             return {
-                "Error":"Unable to map host name to a company."
+                "Unknown":"Unable to map host name to a company."
             }
         }
 

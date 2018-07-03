@@ -21,9 +21,14 @@ app.get('/host/:hostName', async (req, res) => {
     let message = {"details":"unknown"};
     let headersSent = false;
     process.on('uncaughtException', function (err) {
-        if(!headersSent){
-            res.send({"UNCAUGHT_ERROR":err.toString()});
-            headersSent = true;
+        try{
+            if(!headersSent){
+                res.send({"UNCAUGHT_ERROR":err.toString()});
+                headersSent = true;
+            }
+        }
+        catch(err) {
+            console.log(`Unable to send uncaught error message ${err}`);
         }
     });
     try{
