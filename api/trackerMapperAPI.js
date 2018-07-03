@@ -7,6 +7,10 @@ const mapper = new Mapper();
 const express = require("express");
 const config = require("../config/config.json");
 
+
+
+
+
 const app = express();
 
 app.get('/', (req, res) => {
@@ -15,6 +19,7 @@ app.get('/', (req, res) => {
 
 app.get('/host/:hostName', async (req, res) => {
     let message = {"details":"unknown"};
+    let headersSent = false;
     process.on('uncaughtException', function (err) {
         if(!headersSent){
             res.send({"UNCAUGHT_ERROR":err.toString()});
@@ -29,8 +34,7 @@ app.get('/host/:hostName', async (req, res) => {
             && mapping.companyName != undefined
             && mapping.hostID != undefined
             && mapping.hostName != undefined) {
-                message = mapping
-                
+                message = mapping;
             }
             headersSent = true;
             res.send(message);
@@ -41,6 +45,9 @@ app.get('/host/:hostName', async (req, res) => {
         if(!headersSent) {
             res.send({"ERROR":err.toString()});
         }
+    }
+    finally {
+        headersSent = false;
     }
 });
 
