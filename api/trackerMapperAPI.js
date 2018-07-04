@@ -12,9 +12,28 @@ const config = require("../config/config.json");
 
 
 const app = express();
+app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send("X-Ray Tracker Mapper.");
+});
+
+app.post('/hosts', async(req, res) => {
+    let headersSent = false;
+    process.on('uncaughtException', function (err) {
+        console.log(`Unable to send uncaught error message ${err}`);
+    });
+    let hostNames = req.body.host_names;
+    let mappedHosts = [];
+    try{
+        for(let host of hostNames) {
+            mappedHosts.push(await mapper.processHostCompanyRequest(req.params.hostName));
+        }
+        res.send(mappedHosts);
+    }
+    catch(err) {
+        res.send({Error:'Unable to carry out your request.'});
+    }
 });
 
 app.get('/host/:hostName', async (req, res) => {
