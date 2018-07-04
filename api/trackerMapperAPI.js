@@ -27,12 +27,12 @@ app.post('/hosts', async(req, res) => {
     let mappedHosts = [];
     try{
         for(let host of hostNames) {
-            mappedHosts.push(await mapper.processHostCompanyRequest(req.params.hostName));
+            mappedHosts.push(await mapper.processHostCompanyRequest(host));
         }
         res.send(mappedHosts);
     }
     catch(err) {
-        res.send({Error:'Unable to carry out your request.'});
+        res.send({Error:'Unable to carry out your request.'})
     }
 });
 
