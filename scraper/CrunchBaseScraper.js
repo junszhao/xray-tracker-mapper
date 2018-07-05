@@ -64,7 +64,7 @@ class CrunchBaseScraper {
 
         let $ = await this.loadPage(page);
 
-        return this.findCategoryHrefs($);
+        return this.findCategoryHrefs($).toArray();
     }
 }
 
