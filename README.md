@@ -27,8 +27,8 @@ At the moment is not used, but is intended to be a store for Top-Level-Domain in
 ## How to setup.
 
 1. From a Linux environment, clone the repository.
-2. initialise a PostgreSQL Database using `init_db.sql` found in `path_to_repo/db/init_db.sql`
+2. initialise a PostgreSQL Database using `init_db.sql` found in `path_to_repo/db/init_db.sql` (Prerequsitie: a Postgres server and client running on your system)
 3. make a copy of `example_config.json` and rename it to `config.json`
 4. update the details of `config.json` so it accurately reflects your DB setup.
-5. use `node js` to run the `trackerMapperAPI.js` file.
+5. use `node js` in the `path_to_repo` to run the `trackerMapperAPI.js` file using the command of `node api/trackerMapperAPI.js'
 6. from a web browser, navigate to `localhost:8080` or `localhost:<<whatever port>>` if you changed the port number in `config.json`
